@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class PaddleController : MonoBehaviour
 {   
-    public float unitsPerSecond = 3f;
+    public float unitsPerSecond;
     // Start is called before the first frame update
     public Rigidbody leftPaddle; //I'm not entirely sure about this method
     public Rigidbody rightPaddle;
     private Vector3 shrinkPaddle;
 
+    public AudioClip ping;
+    public AudioClip pong;
 
 
     void Start()
@@ -27,6 +29,7 @@ public class PaddleController : MonoBehaviour
         horizontalValue = Input.GetAxis("Left Paddle");
         force = Vector3.right * horizontalValue;
         leftPaddle.AddForce(force, ForceMode.Force);
+
 
     }
 
@@ -66,6 +69,18 @@ public class PaddleController : MonoBehaviour
         }
 
         collision.rigidbody.AddForce(bounceDirection * 1000f, ForceMode.Force);
+
+        //audio
+        if((collision.gameObject.transform.position.x-minX)/(maxX-minX) < .55f && (collision.gameObject.transform.position.x-minX)/(maxX-minX) > .45f){
+            AudioSource audioSource = GetComponent<AudioSource>();
+            audioSource.clip = pong;
+            audioSource.Play();
+
+        } else {
+            AudioSource audioSource = GetComponent<AudioSource>();
+            audioSource.clip = ping;
+            audioSource.Play();
+        }
 
     }
 
